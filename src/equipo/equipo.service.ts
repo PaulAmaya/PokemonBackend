@@ -175,12 +175,28 @@ export class EquipoService {
   }
 
   async removePokemonFromEquipo(equipoId: number, pokemonId: number): Promise<Equipo> {
-    const equipo = await this.findOne(equipoId);
+    // Buscar el equipo con todas las relaciones necesarias
+    const equipo = await this.equipoRepository.findOne({
+      where: { id: equipoId },
+      relations: ['pokemones', 'pokemones.pokemon'],
+    });
+
+    if (!equipo) {
+      throw new NotFoundException(`Equipo con ID ${equipoId} no encontrado`);
+    }
+
+    // Debug: Ver qué Pokémon están en el equipo
+    console.log('Pokémon en el equipo:', equipo.pokemones.map(pe => ({
+      pokemonEnEquipoId: pe.id,
+      pokemonId: pe.pokemon.id,
+      pokemonNombre: pe.pokemon.nombre
+    })));
+    console.log('Buscando Pokémon con ID:', pokemonId);
     
-    // Buscar el Pokémon en el equipo
+    // Buscar el Pokémon en el equipo por ID del Pokémon
     const pokemonEnEquipo = equipo.pokemones.find(pe => pe.pokemon.id === pokemonId);
     if (!pokemonEnEquipo) {
-      throw new NotFoundException('El Pokémon no está en este equipo');
+      throw new NotFoundException(`El Pokémon con ID ${pokemonId} no está en este equipo. Pokémon disponibles: ${equipo.pokemones.map(pe => `${pe.pokemon.nombre} (ID: ${pe.pokemon.id})`).join(', ')}`);
     }
 
     // Eliminar el Pokémon del equipo

@@ -25,13 +25,13 @@ export class PokemonEnEquipo {
   apodo: string;
 
   @ManyToOne(() => Item, { nullable: true })
-  item: Item;
+  item?: Item;
 
-  @ManyToOne(() => PokemonHabilidad)
-  habilidad: PokemonHabilidad;
+  @ManyToOne(() => PokemonHabilidad, { nullable: true })
+  habilidad?: PokemonHabilidad;
 
-  @ManyToOne(() => Naturaleza)
-  naturaleza: Naturaleza;
+  @ManyToOne(() => Naturaleza, { nullable: true })
+  naturaleza?: Naturaleza;
 
   @OneToOne(() => EV, ev => ev.pokemonEnEquipo, { cascade: true })
   @JoinColumn()

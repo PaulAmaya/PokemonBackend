@@ -1,4 +1,19 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreatePokemonEnEquipoDto } from './create-pokemon-en-equipo.dto';
+import { IsOptional, IsNumber, IsString } from 'class-validator';
 
-export class UpdatePokemonEnEquipoDto extends PartialType(CreatePokemonEnEquipoDto) {}
+export class UpdatePokemonEnEquipoDto {
+  @IsOptional()
+  @IsString()
+  apodo?: string;
+
+  @IsOptional()
+  @IsNumber()
+  itemId?: number;
+
+  @IsOptional()
+  @IsNumber()
+  habilidadId?: number;
+
+  @IsOptional()
+  @IsNumber()
+  naturalezaId?: number;
+}
